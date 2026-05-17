@@ -1,13 +1,12 @@
 #!/bin/bash
 set -e
 
-echo "Chii Family: Copying common/ to backend dist (no rsync needed)"
+echo "=== Chii Family dist copy (rsync-free for Vercel) ==="
 
-# Create directories
 mkdir -p dist/common/lib
 mkdir -p dist/backend/api
 
-# Copy common code (using cp -r for Vercel compatibility)
+# Copy common code using native cp (Vercel compatible)
 cp -r ../../common/* dist/common/ 2>/dev/null || true
 
-echo "✅ Chii Family dist copy complete — ready for liquid flows"
+echo "✅ Chii Family backend ready for roots syncing, ancestral matchmaking & e-Chimusika liquid flows"
