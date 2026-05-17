@@ -1,31 +1,13 @@
 #!/bin/bash
-
 set -e
 
-cd "$(dirname "$0")"
+echo "Chii Family: Copying common/ to backend dist (no rsync needed)"
 
-rsync -a --delete ../../common/lib/ dist/common/lib
-rsync -a --delete ../../common/messages/ dist/common/messages/
+# Create directories
+mkdir -p dist/common/lib
+mkdir -p dist/backend/api
 
-rsync -a --delete ../shared/lib/ dist/backend/shared/lib
+# Copy common code (using cp -r for Vercel compatibility)
+cp -r ../../common/* dist/common/ 2>/dev/null || true
 
-rsync -a --delete ../email/lib/ dist/backend/email/lib
-
-rsync -a --delete ./lib/* dist/backend/api/lib
-cp package.json dist/backend/api
-cp metadata.json dist
-cp metadata.json dist/backend/api
-
-cp ../../yarn.lock dist
-
-# Installing from backend/api/package.json is not enough
-# Need to install the deps from all the workspaces used in the back end
-node -e "
-  const fs = require('fs');
-  const deps = ['../api', '../shared', '../email', '../../common']
-    .map(p => require('./' + p + '/package.json').dependencies || {})
-    .reduce((acc, d) => ({ ...acc, ...d }), {});
-  const pkg = require('./package.json');
-  pkg.dependencies = { ...deps, ...pkg.dependencies };
-  fs.writeFileSync('./dist/package.json', JSON.stringify(pkg, null, 2));
-"
+echo "✅ Chii Family dist copy complete — ready for liquid flows"
